@@ -18,6 +18,22 @@ foreach (@generation_tests) {
      "Ahnentafel $_->[0] is in generation $_->[1]");
 }
 
+my @description_tests = (
+  [ Person => 1 ],
+  [ Father => 2 ],
+  [ Mother => 3 ],
+  [ Grandfather => 4 ],
+  [ Grandmother => 5 ],
+  [ Grandfather => 6 ],
+  [ Grandmother => 7 ],
+  [ 'Great Grandfather' => 8 ],
+  [ 'Great Grandmother' => 9 ],
+);
+
+foreach (@description_tests) {
+  is(description($_->[1]), $_->[0], "Person $_->[1] is a $_->[0]");
+}
+
 for (qw[1 4 7 14 81 123]) {
   ok(Genealogy::Ahnentafel::is_valid($_), "$_ is a valid Ahnentafel");
 }

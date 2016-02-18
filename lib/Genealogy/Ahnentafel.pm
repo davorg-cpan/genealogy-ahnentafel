@@ -5,7 +5,8 @@ use warnings;
 
 require Exporter;
 our @ISA = qw[Exporter];
-our @EXPORT = qw[gender gender_string generation description];
+our @EXPORT = qw[gender gender_string generation description
+                 ancestry ancestry_string];
 
 use Carp;
 
@@ -50,6 +51,26 @@ sub description {
   return $root    if $generation == 3;
   my $greats = $generation - 3;
   return ('Great ' x $greats) . $root;
+}
+
+sub ancestry {
+  is_valid(@_);
+
+  my @ancestry;
+  my $curr = $_[0];
+
+  while ($curr) {
+    push @ancestry, gender_string($curr);
+    $curr = int($curr / 2);
+  }
+
+  return reverse @ancestry;
+}
+
+sub ancestry_string {
+  is_valid(@_);
+
+  return join ', ', ancestry(@_);
 }
 
 sub is_valid {

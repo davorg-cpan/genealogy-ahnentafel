@@ -1,7 +1,15 @@
 package Genealogy::Ahnentafel;
 
+=head1 NAME
+
+Genealogy::Ahnentafel - Handle Ahnentafel numbers in Perl.
+
+=cut
+
 use strict;
 use warnings;
+
+our $VERSION = '0.0.1';
 
 require Exporter;
 our @ISA = qw[Exporter];

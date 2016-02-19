@@ -77,7 +77,14 @@ sub _build_gender_description {
 # Persons 2 & 3 are Person 1's parents and are in generation 2
 # Persons 4, 5, 6 & 7 are Person 1's grandparents and are in generation 3
 # etc ...
-sub generation {
+has generation => (
+  is => 'ro',
+  isa => $PositiveInt,
+  lazy => 1,
+  builder => '_build_generation',
+);
+
+sub _build_generation {
   my $ahnen = $_[0]->ahnentafel;
   return int log( $ahnen ) / log(2) + 1;
 }
@@ -88,6 +95,7 @@ has description => (
   lazy => 1,
   builder => '_build_description',
 );
+
 sub _build_description {
   my $ahnen = $_[0]->ahnentafel;
 
@@ -103,31 +111,34 @@ sub _build_description {
   return ('Great ' x $greats) . $root;
 }
 
-sub ancestry {
-  is_valid(@_);
+has ancestry => (
+  is => 'ro',
+  isa => ArrayRef,
+  lazy => 1,
+  builder => '_build_ancestry',
+);
 
+sub _build_ancestry {
   my @ancestry;
-  my $curr = $_[0];
+  my $curr = $_[0]->ahnentafel;
 
   while ($curr) {
-    push @ancestry, gender_string($curr);
+    unshift @ancestry, ahnen($curr);
     $curr = int($curr / 2);
   }
 
-  return reverse @ancestry;
+  return \@ancestry;
 }
 
-sub ancestry_string {
-  is_valid(@_);
+has ancestry_string => (
+  is => 'ro',
+  isa => Str,
+  lazy => 1,
+  builder => '_build_ancestry_string',
+);
 
-  return join ', ', ancestry(@_);
-}
-
-sub is_valid {
-  @_             or croak "No Ahnentafel number given";
-  $_[0] =~ /\D/ and croak "$_[0] is not a valid Ahnentafel number";
-  $_[0] < 1     and croak "Ahnentafel numbers start at 1";
-  return 1;
+sub _build_ancestry_string {
+  return join ', ', map { $_->description } @{ $_[0]->ancestry };
 }
 
 sub ahnen {

@@ -4,6 +4,43 @@ package Genealogy::Ahnentafel;
 
 Genealogy::Ahnentafel - Handle Ahnentafel numbers in Perl.
 
+=head1 SYNOPSIS
+
+   use Genealogy::Ahnentafel;
+
+   my $ahnen = ahnen(1);
+   say $ahnen->gen;         # 1
+   say $ahnen->gender;      # Unknown
+   say $ahnen->description; # Person
+
+   my $ahnen = ahnen(2);
+   say $ahnen->gen;         # 2
+   say $ahnen->gender;      # Male
+   say $ahnen->description; # Father
+
+   my $ahnen = ahnen(5);
+   say $ahnen->gen;         # 3
+   say $ahnen->gender;      # Female
+   say $ahnen->description; # Grandmother
+
+=head1 DESCRIPTION
+
+Geologists often use Ahnentafel (from the German for "ancestor table")
+numbers to identify the direct ancestors of a person. The original
+person of interest is given the number 1, their father and mother are
+2 and 3, their paternal grandparents are 4 and 5, their maternal
+grandparents are 6 and 7 and the list goes on.
+
+This class gives you a way to deal with these numbers in Perl.
+
+Ahnentafel numbers have some interesting properties. For example, with
+the exception of the first person in the list (who can, obviously, be
+of either sex) all of the men have Ahnentafel numbers which are even
+and the women have Ahnentafel numbers which are even. You can calculate
+the number of the father of any person on the list simply by doubling
+the number of the child. You can get the number of their mother by
+doubling the child's number and adding one.
+
 =cut
 
 use strict;
@@ -27,6 +64,40 @@ my $PositiveInt = declare
   where     {  $_ > 0  },
   inline_as { "$_ =~ /^[0-9]+\$/ and $_ > 0" };
 
+=head1 FUNCTIONS
+
+This module exports one function.
+
+=head2 ahnen($positive_integer)
+
+This function takes a positive integer and returns a Genealogy::Ahnentafel
+object for that integer. If you pass it something that isn't a positive
+integer the function will throw an exception.
+
+This is just a short-cut for
+
+  Genealogy::Ahnentafel->new({ ahnentafel => $positive_integer })
+
+=cut
+
+sub ahnen {
+  return Genealogy::Ahnentafel->new({ ahnentafel => $_[0] });
+}
+
+=head1 CLASS ATTRIBUTES
+
+The module provides two class attributes. These define strings that are
+used in the out of various methods in the class. They are provided to
+make it easier to subclass this class to support internationalisation.
+
+=head2 genders
+
+This is a reference to an array that contains two strings that represent
+the genders male and female. By default, they are the strings "Male" and
+"Female".
+
+=cut
+
 class_has genders => (
   is      => 'ro',
   isa     => ArrayRef[Str],
@@ -37,6 +108,17 @@ class_has genders => (
 sub _build_genders {
   return [ qw[Male Female] ];
 }
+
+=head2 parent_names
+
+This is a reference to an array that contains two strings that represent
+the parent of the two genders. By default, they are the strings "Father"
+and "Mother".
+
+Note that these strings are also used to build more complex relationship
+names like "Grandfather" and "Great Grandmother".
+
+=cut
 
 class_has parent_names => (
   is      => 'ro',
@@ -49,11 +131,33 @@ sub _build_parent_names {
   return [ qw[Father Mother] ];
 }
 
+=head1 OBJECT ATTRIBUTES
+
+Objects of this class have the following attributes. Most them are
+lazily generated from the Ahnentafel number.
+
+=head2 ahnentafel
+
+The positive integer that was used to create this object.
+
+  say ahnen(123)->ahnentafel; # 123
+
+=cut
+
 has ahnentafel => (
   is       => 'ro',
   isa      => $PositiveInt,
   required => 1,
 );
+
+=head2 gender
+
+The gender of the person represented by this object. This returns "Unknown"
+for person 1 (as the person at the root of the tree can be of either gender).
+Other than that people with an even Ahnentafel number are men and people with
+an odd Ahnentafel are women.
+
+=cut
 
 has gender => (
   is      => 'ro',
@@ -68,6 +172,17 @@ sub _build_gender {
   return $_[0]->genders->[ $ahnen % 2 ];
 }
 
+=head2 gender_description
+
+(I'm not convinced by this name. I'll almost certainly change it at some
+point.)
+
+The base word that is used for people of this gender. It is "Person" for
+person 1 (as we don't know their gender) and either "Father" or "Mother"
+as appropriate for everyone else.
+
+=cut
+
 has gender_description => (
   is      => 'ro',
   isa     => Str,
@@ -81,11 +196,14 @@ sub _build_gender_description {
   return $_[0]->parent_names->[ $ahnen % 2 ];
 }
 
-# Get the generation number from an Ahnentafel number.
-# Person 1 is in generation 1
-# Persons 2 & 3 are Person 1's parents and are in generation 2
-# Persons 4, 5, 6 & 7 are Person 1's grandparents and are in generation 3
-# etc ...
+=head2 generation
+
+The number of the generation that this person is in. Person 1 is in
+generation 1. People 2 and 3 (the parents) are in generation 2. People
+4 to 7 (the grandparents) are in generation 3. And so on.
+
+=cut
+
 has generation => (
   is      => 'ro',
   isa     => $PositiveInt,
@@ -97,6 +215,16 @@ sub _build_generation {
   my $ahnen = $_[0]->ahnentafel;
   return int log( $ahnen ) / log(2) + 1;
 }
+
+=head2 description
+
+A description of the relationship between the root person and the current
+person. For person 1, it is "Person". For people 2 and 3 it is "Father"
+or "Mother". For people in generation 3, it is "Grandfather" or
+"Grandmother". After that we prepend the appropriate number of repetitions
+of "Great" - "Great Grandmother", "Great Great Grandfather", etc.
+
+=cut
 
 has description => (
   is      => 'ro',
@@ -120,6 +248,13 @@ sub _build_description {
   return ('Great ' x $greats) . $root;
 }
 
+=head2 ancestry
+
+An array of Genealogy::Ahnentafel objects representing all of the people
+between (and including) the root person and the current person.
+
+=cut
+
 has ancestry => (
   is      => 'ro',
   isa     => ArrayRef,
@@ -139,6 +274,12 @@ sub _build_ancestry {
   return \@ancestry;
 }
 
+=head2 ancestry_string
+
+A string representation of ancestry.
+
+=cut
+
 has ancestry_string => (
   is      => 'ro',
   isa     => Str,
@@ -150,6 +291,13 @@ sub _build_ancestry_string {
   return join ', ', map { $_->description } @{ $_[0]->ancestry };
 }
 
+=head2 father
+
+A Genealogy::Ahnentafel object representing the father of the current
+person.
+
+=cut
+
 has father => (
   is      => 'ro',
   lazy    => 1,
@@ -160,6 +308,13 @@ sub _build_father {
   return ahnen($_[0]->ahnentafel * 2);
 }
 
+=head2 mother
+
+A Genealogy::Ahnentafel object representing the mother of the current
+person.
+
+=cut
+
 has mother => (
   is      => 'ro',
   lazy    => 1,
@@ -168,10 +323,6 @@ has mother => (
 
 sub _build_mother {
   return ahnen($_[0]->ahnentafel * 2 + 1);
-}
-
-sub ahnen {
-  return Genealogy::Ahnentafel->new({ ahnentafel => $_[0] });
 }
 
 1;

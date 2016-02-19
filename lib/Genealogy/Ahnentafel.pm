@@ -325,4 +325,17 @@ sub _build_mother {
   return ahnen($_[0]->ahnentafel * 2 + 1);
 }
 
+=head2 AUTHOR
+
+Dave Cross <dave@perlhacks.com>
+
+=head2 COPYRIGHT AND LICENCE
+
+Copyright (c) 2016, Magnum Solutions Ltd. All Rights Reserved.
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
+
 1;

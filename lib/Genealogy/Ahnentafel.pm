@@ -5,26 +5,71 @@ use warnings;
 
 require Exporter;
 our @ISA = qw[Exporter];
-our @EXPORT = qw[gender gender_string generation description
-                 ancestry ancestry_string];
+our @EXPORT = qw[ahnen];
 
 use Carp;
 
-our @GENDERS = qw[Male Female];
-our @PARENTS = qw[Father Mother];
+use Moo;
+use Types::Standard qw( Str Int ArrayRef );
+use Type::Utils qw( declare as where inline_as coerce from );
 
-sub gender {
-  is_valid(@_);
+my $PositiveInt = declare
+  as        Int,
+  where     {  $_ > 0  },
+  inline_as { "$_ =~ /^[0-9]+\$/ and $_ > 0" };
 
-  return 'Unknown' if $_[0] == 1;
-  return $GENDERS[ $_[0] % 2 ];
+has ahnentafel => (
+  is  => 'ro',
+  isa => $PositiveInt,
+  required => 1,
+);
+
+has genders => (
+  is  => 'ro',
+  isa => ArrayRef[Str],
+  lazy => 1,
+  builder => '_build_genders',
+);
+
+sub _build_genders {
+  return [ qw[Male Female] ];
 }
 
-sub gender_string {
-  is_valid(@_);
+has parent_names => (
+  is  => 'ro',
+  isa => ArrayRef[Str],
+  lazy => 1,
+  builder => '_build_parent_names',
+);
 
-  return 'Unknown' if $_[0] == 1;
-  return $PARENTS[ $_[0] % 2 ];
+sub _build_parent_names {
+  return [ qw[Father Mother] ];
+}
+
+has gender => (
+  is   => 'ro',
+  isa  => Str,
+  lazy => 1,
+  builder => '_build_gender',
+);
+
+sub _build_gender {
+  my $ahnen = $_[0]->ahnentafel;
+  return 'Unknown' if $ahnen == 1;
+  return $_[0]->genders->[ $ahnen % 2 ];
+}
+
+has gender_description => (
+  is => 'ro',
+  isa => Str,
+  lazy => 1,
+  builder => '_build_gender_description',
+);
+
+sub _build_gender_description {
+  my $ahnen = $_[0]->ahnentafel;
+  return 'Person' if $ahnen == 1;
+  return $_[0]->parent_names->[ $ahnen % 2 ];
 }
 
 # Get the generation number from an Ahnentafel number.
@@ -33,19 +78,24 @@ sub gender_string {
 # Persons 4, 5, 6 & 7 are Person 1's grandparents and are in generation 3
 # etc ...
 sub generation {
-  is_valid(@_);
-
-  return int log( $_[0] ) / log(2) + 1;
+  my $ahnen = $_[0]->ahnentafel;
+  return int log( $ahnen ) / log(2) + 1;
 }
 
-sub description {
-  is_valid(@_);
+has description => (
+  is => 'ro',
+  isa => Str,
+  lazy => 1,
+  builder => '_build_description',
+);
+sub _build_description {
+  my $ahnen = $_[0]->ahnentafel;
 
-  my $generation = generation(@_);
+  my $generation = $_[0]->generation();
 
   return 'Person' if $generation == 1;
 
-  my $root = gender_string(@_);
+  my $root = $_[0]->gender_description;
   return $root    if $generation == 2;
   $root = "Grand\L$root";
   return $root    if $generation == 3;
@@ -79,3 +129,9 @@ sub is_valid {
   $_[0] < 1     and croak "Ahnentafel numbers start at 1";
   return 1;
 }
+
+sub ahnen {
+  return Genealogy::Ahnentafel->new({ ahnentafel => $_[0] });
+}
+
+1;

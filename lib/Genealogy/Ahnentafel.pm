@@ -10,6 +10,7 @@ our @EXPORT = qw[ahnen];
 use Carp;
 
 use Moo;
+use MooX::ClassAttribute;
 use Types::Standard qw( Str Int ArrayRef );
 use Type::Utils qw( declare as where inline_as coerce from );
 
@@ -18,16 +19,10 @@ my $PositiveInt = declare
   where     {  $_ > 0  },
   inline_as { "$_ =~ /^[0-9]+\$/ and $_ > 0" };
 
-has ahnentafel => (
-  is  => 'ro',
-  isa => $PositiveInt,
-  required => 1,
-);
-
-has genders => (
-  is  => 'ro',
-  isa => ArrayRef[Str],
-  lazy => 1,
+class_has genders => (
+  is      => 'ro',
+  isa     => ArrayRef[Str],
+  lazy    => 1,
   builder => '_build_genders',
 );
 
@@ -35,10 +30,10 @@ sub _build_genders {
   return [ qw[Male Female] ];
 }
 
-has parent_names => (
-  is  => 'ro',
-  isa => ArrayRef[Str],
-  lazy => 1,
+class_has parent_names => (
+  is      => 'ro',
+  isa     => ArrayRef[Str],
+  lazy    => 1,
   builder => '_build_parent_names',
 );
 
@@ -46,10 +41,16 @@ sub _build_parent_names {
   return [ qw[Father Mother] ];
 }
 
+has ahnentafel => (
+  is       => 'ro',
+  isa      => $PositiveInt,
+  required => 1,
+);
+
 has gender => (
-  is   => 'ro',
-  isa  => Str,
-  lazy => 1,
+  is      => 'ro',
+  isa     => Str,
+  lazy    => 1,
   builder => '_build_gender',
 );
 
@@ -60,9 +61,9 @@ sub _build_gender {
 }
 
 has gender_description => (
-  is => 'ro',
-  isa => Str,
-  lazy => 1,
+  is      => 'ro',
+  isa     => Str,
+  lazy    => 1,
   builder => '_build_gender_description',
 );
 
@@ -78,9 +79,9 @@ sub _build_gender_description {
 # Persons 4, 5, 6 & 7 are Person 1's grandparents and are in generation 3
 # etc ...
 has generation => (
-  is => 'ro',
-  isa => $PositiveInt,
-  lazy => 1,
+  is      => 'ro',
+  isa     => $PositiveInt,
+  lazy    => 1,
   builder => '_build_generation',
 );
 
@@ -90,9 +91,9 @@ sub _build_generation {
 }
 
 has description => (
-  is => 'ro',
-  isa => Str,
-  lazy => 1,
+  is      => 'ro',
+  isa     => Str,
+  lazy    => 1,
   builder => '_build_description',
 );
 
@@ -112,9 +113,9 @@ sub _build_description {
 }
 
 has ancestry => (
-  is => 'ro',
-  isa => ArrayRef,
-  lazy => 1,
+  is      => 'ro',
+  isa     => ArrayRef,
+  lazy    => 1,
   builder => '_build_ancestry',
 );
 
@@ -131,14 +132,34 @@ sub _build_ancestry {
 }
 
 has ancestry_string => (
-  is => 'ro',
-  isa => Str,
-  lazy => 1,
+  is      => 'ro',
+  isa     => Str,
+  lazy    => 1,
   builder => '_build_ancestry_string',
 );
 
 sub _build_ancestry_string {
   return join ', ', map { $_->description } @{ $_[0]->ancestry };
+}
+
+has father => (
+  is      => 'ro',
+  lazy    => 1,
+  builder => '_build_father',
+);
+
+sub _build_father {
+  return ahnen($_[0]->ahnentafel * 2);
+}
+
+has mother => (
+  is      => 'ro',
+  lazy    => 1,
+  builder => '_build_mother',
+);
+
+sub _build_mother {
+  return ahnen($_[0]->ahnentafel * 2 + 1);
 }
 
 sub ahnen {

@@ -15,4 +15,14 @@ WriteMakefile(
     ABSTRACT_FROM     => 'lib/Genealogy/Ahnentafel.pm',
     AUTHOR            => 'Dave Cross <dave@perlhacks.com>',
     LICENSE           => 'perl',
+    META_MERGE        => {
+        resources => {
+            repository => {
+                type => 'git',
+                url => 'git://github.com/davorg/genealogy-ahnentafel.git',
+                web => 'https://github.com/davorg/extutils-ahnentafel',
+            },
+        },
+ 
+    },
 );

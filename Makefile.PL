@@ -15,6 +15,7 @@ WriteMakefile(
     ABSTRACT_FROM     => 'lib/Genealogy/Ahnentafel.pm',
     AUTHOR            => 'Dave Cross <dave@perlhacks.com>',
     LICENSE           => 'perl',
+    MIN_PERL_VERSION  => '5.6.0',
     META_MERGE        => {
         resources => {
             repository => {

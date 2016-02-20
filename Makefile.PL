@@ -9,6 +9,9 @@ WriteMakefile(
         Types::Standard      => 0,
         Type::Utils          => 0,
 },
+    BUILD_REQUIRES    => {
+        Test::Exception      => 0,
+    },
     ABSTRACT_FROM     => 'lib/Genealogy/Ahnentafel.pm',
     AUTHOR            => 'Dave Cross <dave@perlhacks.com>',
     LICENSE           => 'perl',

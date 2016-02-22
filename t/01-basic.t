@@ -39,6 +39,20 @@ for (qw[1 4 7 14 81 123]) {
   ok(ahnen($_), "$_ is a valid Ahnentafel");
 }
 
+my @generation_tests = (
+  [ 1, 1, 1, 1, 1 ],
+  [ 2, 2, 1, 3, '' ],
+  [ 127, 64, '', 127, 1],
+);
+
+foreach (@generation_tests) {
+  my $ahnen = ahnen($_->[0]);
+  is($ahnen->first_in_generation, $_->[1], "First in generation for $_->[0]");
+  is($ahnen->is_first_in_generation, $_->[2], "Is first in generation for $_->[0]");
+  is($ahnen->last_in_generation, $_->[3], "Last in generation for $_->[0]");
+  is($ahnen->is_last_in_generation, $_->[4], "Is first in generation for $_->[0]");
+}
+
 #throws_ok { ahnen() }
 #          qr/did not pass type constraint/, 'Correct error thrown';
 

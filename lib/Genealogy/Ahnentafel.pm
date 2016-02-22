@@ -56,7 +56,7 @@ use Carp;
 
 use Moo;
 use MooX::ClassAttribute;
-use Types::Standard qw( Str Int ArrayRef );
+use Types::Standard qw( Str Int ArrayRef Bool );
 use Type::Utils qw( declare as where inline_as coerce from );
 
 my $PositiveInt = declare
@@ -323,6 +323,74 @@ has mother => (
 
 sub _build_mother {
   return ahnen($_[0]->ahnentafel * 2 + 1);
+}
+
+=head2 first_in_generation
+
+The lowest Ahnentafel number that appears in the current generation.
+
+=cut
+
+has first_in_generation => (
+  is      => 'ro',
+  isa     => Int,
+  lazy    => 1,
+  builder => '_build_first_in_generation',
+);
+
+sub _build_first_in_generation {
+  return 2 ** ($_[0]->generation - 1);
+}
+
+=head is_first_in_generation
+
+Is this the first Ahnentafel number in the current generation?
+
+=cut
+
+has is_first_in_generation => (
+  is      => 'ro',
+  isa     => Bool,
+  lazy    => 1,
+  builder => '_build_is_first_in_generation',
+);
+
+sub _build_is_first_in_generation {
+  return $_[0]->first_in_generation == $_[0]->ahnentafel;
+}
+
+=head2 last_in_generation
+
+The highest Ahnentafel number that appears in the current generation.
+
+=cut
+
+has last_in_generation => (
+  is      => 'ro',
+  isa     => Int,
+  lazy    => 1,
+  builder => '_build_last_in_generation',
+);
+
+sub _build_last_in_generation {
+  return 2 ** $_[0]->generation - 1;
+}
+
+=head is_last_in_generation
+
+Is this the last Ahnentafel number in the current generation?
+
+=cut
+
+has is_last_in_generation => (
+  is      => 'ro',
+  isa     => Bool,
+  lazy    => 1,
+  builder => '_build_is_last_in_generation',
+);
+
+sub _build_is_last_in_generation {
+  return $_[0]->last_in_generation == $_[0]->ahnentafel;
 }
 
 =head1 AUTHOR

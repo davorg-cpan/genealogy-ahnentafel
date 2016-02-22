@@ -46,7 +46,7 @@ doubling the child's number and adding one.
 use strict;
 use warnings;
 
-our $VERSION = '0.0.3';
+our $VERSION = '0.0.4';
 
 require Exporter;
 our @ISA = qw[Exporter];

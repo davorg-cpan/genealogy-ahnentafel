@@ -56,7 +56,7 @@ This is just a short-cut for
 # CLASS ATTRIBUTES
 
 The module provides two class attributes. These define strings that are
-used in the out of various methods in the class. They are provided to
+used in the output of various methods in the class. They are provided to
 make it easier to subclass this class to support internationalisation.
 
 ## genders

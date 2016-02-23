@@ -342,7 +342,7 @@ sub _build_first_in_generation {
   return 2 ** ($_[0]->generation - 1);
 }
 
-=head is_first_in_generation
+=head2 is_first_in_generation
 
 Is this the first Ahnentafel number in the current generation?
 
@@ -376,7 +376,7 @@ sub _build_last_in_generation {
   return 2 ** $_[0]->generation - 1;
 }
 
-=head is_last_in_generation
+=head2 is_last_in_generation
 
 Is this the last Ahnentafel number in the current generation?
 

@@ -103,10 +103,8 @@ the genders male and female. By default, they are the strings "Male" and
 =cut
 
 class_has genders => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => ArrayRef[Str],
-  lazy    => 1,
-  builder => '_build_genders',
 );
 
 sub _build_genders {
@@ -125,10 +123,8 @@ names like "Grandfather" and "Great Grandmother".
 =cut
 
 class_has parent_names => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => ArrayRef[Str],
-  lazy    => 1,
-  builder => '_build_parent_names',
 );
 
 sub _build_parent_names {
@@ -164,10 +160,8 @@ an odd Ahnentafel are women.
 =cut
 
 has gender => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => Str,
-  lazy    => 1,
-  builder => '_build_gender',
 );
 
 sub _build_gender {
@@ -188,10 +182,8 @@ as appropriate for everyone else.
 =cut
 
 has gender_description => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => Str,
-  lazy    => 1,
-  builder => '_build_gender_description',
 );
 
 sub _build_gender_description {
@@ -209,10 +201,8 @@ generation 1. People 2 and 3 (the parents) are in generation 2. People
 =cut
 
 has generation => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => $PositiveInt,
-  lazy    => 1,
-  builder => '_build_generation',
 );
 
 sub _build_generation {
@@ -231,10 +221,8 @@ of "Great" - "Great Grandmother", "Great Great Grandfather", etc.
 =cut
 
 has description => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => Str,
-  lazy    => 1,
-  builder => '_build_description',
 );
 
 sub _build_description {
@@ -260,10 +248,8 @@ between (and including) the root person and the current person.
 =cut
 
 has ancestry => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => ArrayRef,
-  lazy    => 1,
-  builder => '_build_ancestry',
 );
 
 sub _build_ancestry {
@@ -285,10 +271,8 @@ A string representation of ancestry.
 =cut
 
 has ancestry_string => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => Str,
-  lazy    => 1,
-  builder => '_build_ancestry_string',
 );
 
 sub _build_ancestry_string {
@@ -303,9 +287,7 @@ person.
 =cut
 
 has father => (
-  is      => 'ro',
-  lazy    => 1,
-  builder => '_build_father',
+  is      => 'lazy',
 );
 
 sub _build_father {
@@ -320,9 +302,7 @@ person.
 =cut
 
 has mother => (
-  is      => 'ro',
-  lazy    => 1,
-  builder => '_build_mother',
+  is      => 'lazy',
 );
 
 sub _build_mother {
@@ -336,10 +316,8 @@ The lowest Ahnentafel number that appears in the current generation.
 =cut
 
 has first_in_generation => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => Int,
-  lazy    => 1,
-  builder => '_build_first_in_generation',
 );
 
 sub _build_first_in_generation {
@@ -353,10 +331,8 @@ Is this the first Ahnentafel number in the current generation?
 =cut
 
 has is_first_in_generation => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => Bool,
-  lazy    => 1,
-  builder => '_build_is_first_in_generation',
 );
 
 sub _build_is_first_in_generation {
@@ -370,10 +346,8 @@ The highest Ahnentafel number that appears in the current generation.
 =cut
 
 has last_in_generation => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => Int,
-  lazy    => 1,
-  builder => '_build_last_in_generation',
 );
 
 sub _build_last_in_generation {
@@ -387,10 +361,8 @@ Is this the last Ahnentafel number in the current generation?
 =cut
 
 has is_last_in_generation => (
-  is      => 'ro',
+  is      => 'lazy',
   isa     => Bool,
-  lazy    => 1,
-  builder => '_build_is_last_in_generation',
 );
 
 sub _build_is_last_in_generation {

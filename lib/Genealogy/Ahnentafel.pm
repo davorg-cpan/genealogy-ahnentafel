@@ -46,7 +46,7 @@ doubling the child's number and adding one.
 use strict;
 use warnings;
 
-our $VERSION = '0.0.4';
+our $VERSION = '0.0.5';
 
 require Exporter;
 our @ISA = qw[Exporter];
@@ -63,6 +63,10 @@ my $PositiveInt = declare
   as        Int,
   where     {  $_ > 0  },
   inline_as { "$_ =~ /^[0-9]+\$/ and $_ > 0" };
+
+use overload
+  '""' => sub { $_[0]->ahnentafel },
+  fallback => 1;
 
 =head1 FUNCTIONS
 

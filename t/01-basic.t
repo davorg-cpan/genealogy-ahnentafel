@@ -53,6 +53,19 @@ foreach (@generation_tests) {
   is($ahnen->is_last_in_generation, $_->[4], "Is first in generation for $_->[0]");
 }
 
+my @parent_tests = (
+  [ 1, 2, 3 ],
+  [ 2, 4, 5 ],
+  [ 5, 10, 11 ],
+  [ 23, 46, 47 ],
+);
+
+foreach (@parent_tests) {
+  my $ahnen = ahnen($_->[0]);
+  is($ahnen->father, $_->[1], "$_->[0]'s father is $_->[1]");
+  is($ahnen->mother, $_->[2], "$_->[0]'s mother is $_->[2]");
+}
+
 #throws_ok { ahnen() }
 #          qr/did not pass type constraint/, 'Correct error thrown';
 

@@ -66,6 +66,10 @@ foreach (@parent_tests) {
   is($ahnen->mother, $_->[2], "$_->[0]'s mother is $_->[2]");
 }
 
+my $grandfather = ahnen(4);
+my $ancestry = $grandfather->ancestry;
+is(@$ancestry, 3, 'Three generations in ancestry');
+
 #throws_ok { ahnen() }
 #          qr/did not pass type constraint/, 'Correct error thrown';
 

@@ -72,8 +72,8 @@ is(@$ancestry, 3, 'Three generations in ancestry');
 is($grandfather->ancestry_string, 'Person, Father, Grandfather',
    'Correct ancestry string');
 
-#throws_ok { ahnen() }
-#          qr/did not pass type constraint/, 'Correct error thrown';
+throws_ok { ahnen() }
+          qr/did not pass type constraint/, 'Correct error thrown';
 
 throws_ok { ahnen(0) }
           qr/did not pass type constraint/, 'Correct error thrown';

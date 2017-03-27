@@ -62,7 +62,7 @@ use Type::Utils qw( declare as where inline_as coerce from );
 my $PositiveInt = declare
   as        Int,
   where     {  $_ > 0  },
-  inline_as { "$_ =~ /^[0-9]+\$/ and $_ > 0" };
+  inline_as { "defined $_ and $_ =~ /^[0-9]+\$/ and $_ > 0" };
 
 use overload
   '""' => sub { $_[0]->ahnentafel },

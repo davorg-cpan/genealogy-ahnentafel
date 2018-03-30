@@ -24,6 +24,5 @@ WriteMakefile(
                 web => 'https://github.com/davorg/extutils-ahnentafel',
             },
         },
- 
     },
 );

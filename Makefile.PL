@@ -16,13 +16,15 @@ WriteMakefile(
     AUTHOR            => 'Dave Cross <dave@perlhacks.com>',
     LICENSE           => 'perl',
     MIN_PERL_VERSION  => '5.6.0',
-    META_MERGE        => {
+    (eval { ExtUtils::MakeMaker->VERSION(6.46) } ? (META_MERGE => {
+        'meta-spec' => { version => 2 },
         resources => {
             repository => {
                 type => 'git',
                 url => 'git://github.com/davorg/genealogy-ahnentafel.git',
-                web => 'https://github.com/davorg/extutils-ahnentafel',
+                web => 'https://github.com/davorg/genealogy-ahnentafel',
             },
-        },
-    },
+        }})
+     : ()
+    ),
 );

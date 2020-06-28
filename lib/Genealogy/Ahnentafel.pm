@@ -1,3 +1,5 @@
+use compat::perl7;
+
 package Genealogy::Ahnentafel;
 
 =head1 NAME

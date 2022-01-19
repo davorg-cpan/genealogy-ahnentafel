@@ -36,7 +36,7 @@ This class gives you a way to deal with these numbers in Perl.
 Ahnentafel numbers have some interesting properties. For example, with
 the exception of the first person in the list (who can, obviously, be
 of either sex) all of the men have Ahnentafel numbers which are even
-and the women have Ahnentafel numbers which are even. You can calculate
+and the women have Ahnentafel numbers which are odd. You can calculate
 the number of the father of any person on the list simply by doubling
 the number of the child. You can get the number of their mother by
 doubling the child's number and adding one.

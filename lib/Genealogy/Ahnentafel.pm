@@ -100,11 +100,13 @@ This function takes an array of strings, of the form
 
 sub ahnen_parents {
   my $ahnen = 1;
+  return $ahnen if @_ == 0;
+  my $mother = __PACKAGE__->parent_names->[1];
   while ( my $parent = shift @_ ) {
     $ahnen *= 2;
-    $ahnen += ( $parent =~ /Mother/i );
+    $ahnen += ( $parent =~ /$mother/i );
   }
-  return Genealogy::Ahnentafel->new({ ahnentafel => $ahnen });
+  return Genealogy::Ahnentafel->new( { ahnentafel => $ahnen } );
 }
 
 =head1 CLASS ATTRIBUTES

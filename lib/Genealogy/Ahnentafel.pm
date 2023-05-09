@@ -50,7 +50,7 @@ our $VERSION = '1.0.3';
 
 require Exporter;
 our @ISA = qw[Exporter];
-our @EXPORT = qw[ahnen];
+our @EXPORT = qw[ahnen ahnen_parents];
 
 use Carp;
 
@@ -86,6 +86,25 @@ This is just a short-cut for
 
 sub ahnen {
   return Genealogy::Ahnentafel->new({ ahnentafel => $_[0] });
+}
+
+=head2 ahnen_parents(@parents)
+
+This function takes an array of strings, of the form 
+ ('Father', "Grand Father", "Great Grand Mother", ...)
+ and created the Ahhentafel number from it. The first element is the parent,
+ next, grand parent etc. We only check for "Mother", so "Grand Mother" 
+ and "Great Grand Mother" etc all match.
+ 
+=cut
+
+sub ahnen_parents {
+  my $ahnen = 1;
+  while ( my $parent = shift @_ ) {
+    $ahnen *= 2;
+    $ahnen += ( $parent =~ /Mother/i );
+  }
+  return Genealogy::Ahnentafel->new({ ahnentafel => $ahnen });
 }
 
 =head1 CLASS ATTRIBUTES

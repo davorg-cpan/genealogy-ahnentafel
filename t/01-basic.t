@@ -69,6 +69,22 @@ foreach (@parent_tests) {
   is($ahnen->mother, $_->[2], "$_->[0]'s mother is $_->[2]");
 }
 
+my %test_data = (
+    2 => ['Father'],
+    3 => ['Mother'],
+    4 => [ 'Father', 'Father' ],
+    5 => [ 'Father', 'Mother' ],
+    6 => [ 'Mother', 'Father', ],
+    7 => [ 'Mother', 'Mother' ],
+);
+
+foreach my $ahnen (keys %test_data) {
+  my $ahnen =  ahnen($ahnen);
+  my $ahnen_parents = ahnen_parents(@{$test_data{$ahnen}});
+  ok( $ahnen == $ahnen_parents, "Expecting $ahnen, got  $ahnen_parents from  @{$test_data{$ahnen}}");
+}
+
+
 my $grandfather = ahnen(4);
 my $ancestry = $grandfather->ancestry;
 is(@$ancestry, 3, 'Three generations in ancestry');

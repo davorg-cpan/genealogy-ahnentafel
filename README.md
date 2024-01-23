@@ -1,5 +1,7 @@
 # NAME
 
+[![Build Status](https://github.com/davorg-cpan/genealogy-ahnentafel/actions/workflows/perltest.yml/badge.svg?branch=master)](https://github.com/davorg-cpan/genealogy-ahnentafel/actions/workflows/perltest.yml) [![Coverage Status](https://coveralls.io/repos/github/davorg-cpan/genealogy-ahnentafel/badge.svg?branch=master)](https://coveralls.io/github/davorg-cpan/genealogy-ahnentafel?branch=master)
+
 Genealogy::Ahnentafel - Handle Ahnentafel numbers in Perl.
 
 # SYNOPSIS

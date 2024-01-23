@@ -21,11 +21,11 @@ WriteMakefile(
         resources => {
             repository => {
                 type => 'git',
-                url => 'git://github.com/davorg/genealogy-ahnentafel.git',
-                web => 'https://github.com/davorg/genealogy-ahnentafel',
+                url => 'git://github.com/davorg-cpan/genealogy-ahnentafel.git',
+                web => 'https://github.com/davorg-cpan/genealogy-ahnentafel',
             },
             bugtracker => {
-                web => 'https://github.com/davorg/genealogy-ahnentafel/issues',
+                web => 'https://github.com/davorg-cpan/genealogy-ahnentafel/issues',
             },
         },
     },
